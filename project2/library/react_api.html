@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Authors</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    class AuthorComponent extends React.Component {
+      render() {
+        return (
+          <div>
+            <h1>{this.props.author.__str__}</h1>
+            <p>Books:</p>
+            <ul>
+              {this.props.author.books.map((elem, i)=> <p key={i}>{elem.title}</p>)}
+              </ul>
+            <img width="300" src={this.props.author.portrait}/>
+            </div>
+        )
+      }
+    } 
+
+    class MyApp extends React.Component {
+      constructor (props) {
+        super(props);
+        this.state = {
+          authors: []
+        }
+      }
+
+      getAuthors () {
+        return this.state.authors.map((author, index) => <AuthorComponent key={index} author={author}/>)
+      }
+
+      refreshData() { 
+        fetch("http://127.0.0.1:8000/api/author/list/")
+          .then((res) => res.json())
+          .then((json) => {
+            this.setState({
+                authors: json,
+            });
+            console.log(json);
+          });
+      }
+
+      componentDidMount() {
+        this.refreshData();
+      }
+
+      render() {
+        return (
+          <div>
+            {this.getAuthors()}
+            </div>
+        );
+      }
+    }
+
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<MyApp />);
+
+  </script>
+</body>
+
+</html>

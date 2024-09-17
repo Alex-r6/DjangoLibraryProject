@@ -1,0 +1,45 @@
+{% extends 'library/base.html' %}
+
+
+{% block title %}Alex Library{% endblock %}
+
+{% block title2 %}<h1 class="text-center">Alex Library</h1>{% endblock %}
+
+{% block content %}
+<div class="row bg-light justify-content-around">
+    <div class="col-3 text-center">
+        <h1>
+            <i class="fa-solid fa-user"></i>
+        </h1>
+        <a href="{% url 'library:author-list' %}" class="fs-3">Authors ({{authors_num}})</a>
+    </div>
+    <div class="col-3 text-center">
+        <h1>
+            <i class="fa-solid fa-book"></i>
+        </h1>
+        <a href="{% url 'library:book-list' %}" class="fs-3">Books ({{books_num}})</a>
+    </div>
+    <div class="col-3 text-center">
+        <h1>
+            <i class="fa-solid fa-masks-theater"></i>
+        </h1>
+        <a href="{% url 'library:genre-list' %}" class="fs-3">Genres ({{genres_num}})</a>
+    </div>
+</div>
+<div class="row">
+    {% if user.is_authenticated %}
+    <h1>Favorite books:</h1>
+    <div class="col-12">
+        <div class="d-flex flex-column">
+            {% for favor in favor_list %}
+            <div class="d-flex flex-column mb-3">
+                <p>{{ favor }}</p>
+                <img src="{{ favor.cover.url }}" style="max-height: 100px; width: 50px;">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

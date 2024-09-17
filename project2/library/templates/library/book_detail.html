@@ -1,0 +1,77 @@
+{% extends 'library/base.html' %}
+
+{% block title %}{{book_detail}}{% endblock %}
+
+{% block title2 %}<h1 class="text-center">{{book_detail}}</h1>{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-around">
+        <div class="col-3 mt-5">
+            <img src="{{book_detail.cover.url}}">
+        </div>
+        <div class="col-8 mt-5">
+            <a class="fs-2" href="{% url 'library:author-detail' slug=book_detail.author.slug %}">
+                {{book_detail.author}}
+            </a>
+            <p>{{book_detail.desc}}</p>
+            <div class="my-3">
+                {% if user.is_authenticated %}
+                <form action="{% url 'library:change-favorite-status' pk=book_detail.id %}" method="post">
+                    {% csrf_token %}
+                    {% if book_detail in user.profile.favorite_books.all %}
+                    <h1 class="text-warning"><i class="fa-solid fa-star"></i></h1>
+                    <button type="submit">Remove from favorites</button>
+                    {% else %}
+                    <button type="submit">Add to favorites</button>
+                    {% endif %}
+                </form>
+                {% endif %}
+            </div>
+            <h1>Shop detail:</h1>
+            {% if book_detail.shop.exists %}
+            {% for book in book_detail.shop.all %}
+            <p>Price: {{ book.price }}</p>
+            <p>Cover: {{ book.book_cover }}</p>
+            {% endfor %}
+            {% else %}
+            <p>Price: ----</p>
+            <p>Cover: ----</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col-6">
+            <h1 class="mb-5">Genres:</h1>
+            {% for genre in book_detail.genres.all %}
+            <div class="col-3 text-center">
+                <a href="{% url 'library:genre-list' %}#{{genre.id}}">
+                    <p>{{genre}}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-6">
+            {% for comment in book_detail.comments.all %}
+            <p>
+                <span class="text-secondary">{{comment.username}}</span>
+                {{comment.text}}
+                <span class="text-secondary fst-italic">{{comment.created}}</span>
+            </p>
+            {% endfor%}
+            <form action="{% url 'library:add-new-comment-1' %}" method="post">
+                {% csrf_token %}
+                <input class="form-control" type="text" name="username" placeholder="username">
+                <input class="form-control my-2" type="text" name="text" placeholder="comment">
+                <input type="hidden" name="book_id" value="{{book_detail.id}}">
+                <input class="btn btn-primary" type="submit" value="Add comment">
+            </form>
+            <hr>
+            <form action="{% url 'library:add-new-comment-2' pk=book_detail.id %}" method="post">
+                {% csrf_token %}
+                {{comment_form}}
+                <input class="btn btn-primary" type="submit" value="Add comment">
+            </form>
+        </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'library/base.html' %}
+
+{% block title %}Genre List{% endblock %}
+{% block title2 %}<h1 class="text-center">All genres:</h1>{% endblock %}
+
+{% block content %}
+{% for genre in genre_list %}
+<a name="{{genre.id}}"></a>
+<p class="fs-2">{{genre}}</p>
+<div class="row my-4">
+    {% for book in genre.books.all %}
+    <div class="col-3 text-center">
+        <img class="w-75 h-75 object-fit-cover rounded" src="{{book.cover.url}}"/>
+        <a href="{% url 'library:book-detail' pk=book.id%}">
+            <p>{{book.title}}</p>
+        </a>
+    </div>
+    {% endfor %}
+
+</div>
+{% endfor%}
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Genres</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    class GenreComponent extends React.Component {
+      render() {
+        return (
+          <div>
+            <h1>Genres: {this.props.genre.name}</h1>
+            <p>Books:</p>
+        <ul>
+          {this.props.genre.books.map((book, i) => (
+            <li key={i}>{book}</li>
+          ))}
+        </ul>
+            </div>
+        )
+      }
+    } 
+
+    class MyApp extends React.Component {
+      constructor (props) {
+        super(props);
+        this.state = {
+          genres: []
+        }
+      }
+
+      getGenres () {
+        return this.state.genres.map((genre, index) => <GenreComponent key={index} genre={genre}/>)
+      }
+
+      refreshData() { 
+        fetch("http://127.0.0.1:8000/api/genre/list/")
+          .then((res) => res.json())
+          .then((json) => {
+            this.setState({
+                genres: json,
+            });
+            console.log(json);
+          });
+      }
+
+      componentDidMount() {
+        this.refreshData();
+      }
+
+      render() {
+        return (
+          <div>
+            {this.getGenres()}
+            </div>
+        );
+      }
+    }
+
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<MyApp />);
+
+  </script>
+</body>
+
+</html>

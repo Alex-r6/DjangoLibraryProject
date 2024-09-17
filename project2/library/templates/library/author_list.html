@@ -1,0 +1,26 @@
+{% extends 'library/base.html' %}
+
+{% block title %}Author List{% endblock %}
+{% block title2 %}<h1 class="text-center">All authors:</h1>{% endblock %}
+
+{% block content %}
+<div class="row my-4">
+    {% for author in author_list.all %}
+    <div class="col-3 text-center">
+        <img class="w-75 h-75 object-fit-cover rounded" src="{{author.portrait}}"/>
+        <a href="{{author.get_absolute_url}}">
+            <p>{{author}}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% if user.is_authenticated %}
+<div class="my-3">
+    <form action="{% url 'library:add-new-author' %}" method="post">
+        {% csrf_token %}
+        {{form}}
+        <input class="btn btn-success my-2" type='submit' value="Add"/>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

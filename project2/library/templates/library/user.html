@@ -1,0 +1,21 @@
+{% extends 'library/base.html' %}
+
+
+{% block title %}Your account creation{% endblock %}
+
+{% block title2 %}<h1 class="text-center">Your account creation</h1>{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        {% if message %}
+        <p class="text-danger">{{message}}</p>
+        {% endif %}
+        <form action="{% url 'library:add-new-user' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form}}
+            <input class="btn btn-warning" type="submit" value="create account"/>
+        </form>
+    </div>
+</div>
+{% endblock %}

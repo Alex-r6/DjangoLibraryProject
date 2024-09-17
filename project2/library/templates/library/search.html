@@ -1,0 +1,57 @@
+{% extends 'library/base.html' %}
+
+{% block title %}search{% endblock %}
+
+{% block title2 %}<h1 class="text-center">Search By: {{pattern}}</h1>{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if books_res %}
+    <h3>Books found: {{books_res|length}}</h3>
+    {% for book in books_res %}
+    <div class="row my-2">
+        <div class="col-2">
+            <img class="w-25" src='{{book.cover.url}}' />
+        </div>
+        <div class="col-6">
+            <a href="{% url 'library:book-detail' pk=book.id %}">{{book.title}}</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h3>No books found</h3>
+    {% endif %}
+
+    <hr>
+    {% if authors_res %}
+    <h3>Authors found: {{authors_res|length}}</h3>
+    {% for author in authors_res %}
+    <div class="row my-2">
+        <div class="col-2">
+            <img class="w-25" src='{{author.portrait}}' />
+        </div>
+        <div class="col-6">
+            <a href="{% url 'library:author-detail' slug=author.slug %}">{{author}}</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h3>No author found</h3>
+    {% endif %}
+</div>
+
+<hr>
+{% if genres_res %}
+<h3>Genres found: {{genres_res|length}}</h3>
+{% for genre in genres_res %}
+<div class="row my-2">
+    <div class="col-2">
+        <p>{{genre}}</p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<h3>No genre found</h3>
+{% endif %}
+</div>
+{% endblock %}
